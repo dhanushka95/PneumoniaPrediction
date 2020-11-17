@@ -1,0 +1,28 @@
+{
+  "name": "pneumonia_server",
+  "version": "1.0.0",
+  "description": "my research for create this server",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --max_old_space_size=512 app.js",
+    "dev": "nodemon app.js",
+    "prod": "NODE_ENV=production pm2 start app.js --name=Admin",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pm2": "NODE_ENV=production pm2 start app.js"
+  },
+  "author": "H.M.D.D HERATH",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "form-data": "^3.0.0",
+    "keras-js": "^1.0.3",
+    "log4js": "^6.3.0",
+    "multer": "^1.4.2",
+    "node-fetch": "^2.6.1",
+    "node-tflite": "0.0.2",
+    "path": "^0.12.7"
+  }
+}

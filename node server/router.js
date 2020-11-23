@@ -25,29 +25,20 @@ router.post(
         }
         try{
             const Path = require('path');
-            const form_1 = new FormData();
-            const form_2 = new FormData();
-            form_1.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
-                filename: file.filename
-            });
-            form_2.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
+            const form = new FormData();
+            form.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
                 filename: file.filename
             });
             req.headers.PredictData = [];
             // get prediction from api 1
-            const API_1 = await axios.create({
-                headers: form_1.getHeaders()
-            }).post('http://127.0.0.1:5001/predict', form_1);
-            const API_1_VALUE = API_1.data;
-
-            // get prediction from api 2
-            const API_2 = await axios.create({
-                headers: form_2.getHeaders()
-            }).post('http://127.0.0.1:5002/predict', form_2);
-            const API_2_VALUE = API_2.data;
-
-
-            console.log('API 1:',API_1_VALUE,'API 2: ',API_2_VALUE);
+            const API = await axios.create({
+                headers: form.getHeaders()
+            }).post('http://127.0.0.1:5003/predict', form);
+            const API_VALUE = API.data;
+            res.status(200).json({
+                data: API_VALUE,
+                message: 'Prediction'
+            });
         }catch (e) {
             console.log(e);
         }

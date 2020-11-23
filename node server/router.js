@@ -16,7 +16,7 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage })
 
 router.post(
-    '/predict', upload.single('image'), (req, res, next) => {
+    '/predict', upload.single('image'), async(req, res, next) => {
         const file = req.file;
         if (!file) {
             const error = new Error('Please uploads a file');
@@ -25,27 +25,35 @@ router.post(
         }
         try{
             const Path = require('path');
-            let form = new FormData();
-            form.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
+            const form_1 = new FormData();
+            const form_2 = new FormData();
+            form_1.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
+                filename: file.filename
+            });
+            form_2.append('image', fs.createReadStream(Path.join('./uploads/'+file.filename)), {
                 filename: file.filename
             });
             req.headers.PredictData = [];
-            axios.create({
-                headers: form.getHeaders()
-            }).post('http://127.0.0.1:5000/predict', form).then(response => {
-                res.status(200).json({
-                    data: response.data===1?true:false,
-                    message: 'Prediction: '+(response.data===1?'Pneumonia':'Normal')
-                });
-            }).catch(error => {
-                console.log(error.message);
-            });
+            // get prediction from api 1
+            const API_1 = await axios.create({
+                headers: form_1.getHeaders()
+            }).post('http://127.0.0.1:5001/predict', form_1);
+            const API_1_VALUE = API_1.data;
+
+            // get prediction from api 2
+            const API_2 = await axios.create({
+                headers: form_2.getHeaders()
+            }).post('http://127.0.0.1:5002/predict', form_2);
+            const API_2_VALUE = API_2.data;
+
+
+            console.log('API 1:',API_1_VALUE,'API 2: ',API_2_VALUE);
         }catch (e) {
             console.log(e);
         }
 
     }
 );
-
+router.get('/buildCSV',require('./controller').createCSV);
 
 module.exports = router;

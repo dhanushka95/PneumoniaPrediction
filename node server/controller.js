@@ -28,8 +28,8 @@ exports.createCSV = async(req, res, next) => {
                             });
                             await axios.create({
                                 headers: form_1.getHeaders()
-                            }).post('http://localhost:5001/predict', form_1).then((response_api_1)=>{
-                                axios.create({
+                            }).post('http://localhost:5001/predict', form_1).then(async (response_api_1)=>{
+                                await axios.create({
                                     headers: form_2.getHeaders()
                                 }).post('http://localhost:5002/predict', form_2).then((response_api_2)=>{
                                     console.log('API 01: ',response_api_1.data,'API 02: ',response_api_2.data,'Expected: ',EXPECTED_VALUE);
@@ -63,8 +63,8 @@ exports.createCSV = async(req, res, next) => {
                             });
                             await axios.create({
                                 headers: form_3.getHeaders()
-                            }).post('http://localhost:5001/predict', form_3).then((response_api_1)=>{
-                                axios.create({
+                            }).post('http://localhost:5001/predict', form_3).then(async(response_api_1)=>{
+                                await axios.create({
                                     headers: form_4.getHeaders()
                                 }).post('http://localhost:5002/predict', form_4).then((response_api_2)=>{
                                     console.log('API 01: ',response_api_1.data,'API 02: ',response_api_2.data,'Expected: ',EXPECTED_VALUE);

@@ -3,6 +3,7 @@ const testFolderNormal = './test data set/normal/';
 const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
+const neatCsv = require('neat-csv');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const csvWriter = createCsvWriter({
     path: 'API_Evaluate.csv',
@@ -90,3 +91,56 @@ exports.createCSV = async(req, res, next) => {
 
 
 };
+
+exports.getWeightForModel = async () => {
+    let record = [];
+    const data = await fs.readFileSync('./API_Evaluate.csv');
+    record = await neatCsv(data);
+    let result_1_1_1 =0;
+    let result_1_1_0 =0;
+    let result_1_0_1 =0;
+    let result_1_0_0 =0;
+    let result_0_1_1 =0;
+    let result_0_0_1 =0;
+    let result_0_0_0 =0;
+    let result_0_1_0 =0;
+    let total = record.length;
+    for(let i=0;i<record.length;i++){
+        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='1'){
+            result_1_1_1++;
+        }
+        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='0'){
+            result_1_1_0++;
+        }
+        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='1'){
+            result_1_0_1++;
+        }
+        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='0'){
+            result_1_0_0++;
+        }
+        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='1'){
+            result_0_1_1++;
+        }
+        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='1'){
+            result_0_0_1++;
+        }
+        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='0'){
+            result_0_0_0++;
+        }if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='0'){
+            result_0_1_0++;
+        }
+    }
+    console.log('result_1_1_1',((result_1_1_1/total)*100));
+    console.log('result_1_1_0',((result_1_1_0/total)*100));
+    console.log('result_1_0_1',((result_1_0_1/total)*100));
+    console.log('result_1_0_0',((result_1_0_0/total)*100));
+    console.log('result_0_1_1',((result_0_1_1/total)*100));
+    console.log('result_0_0_1',((result_0_0_1/total)*100));
+    console.log('result_0_0_0',((result_0_0_0/total)*100));
+    console.log('result_0_1_0',((result_0_1_0/total)*100));
+    console.log('positive percentage--------------------');
+    console.log('result_1_1',((result_1_1_1/(result_1_1_1+result_1_1_0))*100));
+    console.log('result_1_0',((result_1_0_1/(result_1_0_1+result_1_0_0))*100));
+    console.log('result_0_1',(isNaN(result_0_1_1/(result_0_1_1+result_0_1_0))?0:result_0_1_1/(result_0_1_1+result_0_1_0)*100));
+    console.log('result_0_0',((result_0_0_1/(result_0_0_1+result_0_0_0))*100));
+ };

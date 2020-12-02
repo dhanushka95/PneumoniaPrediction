@@ -31,12 +31,29 @@ router.post(
             });
             req.headers.PredictData = [];
             // get prediction from api 1
-            const API = await axios.create({
+            const API_01 = await axios.create({
                 headers: form.getHeaders()
-            }).post('http://127.0.0.1:5003/predict', form);
-            const API_VALUE = API.data;
+            }).post('http://127.0.0.1:5001/predict', form);
+            const API_01_VALUE = API_01.data;
+            const API_02 = await axios.create({
+                headers: form.getHeaders()
+            }).post('http://127.0.0.1:5002/predict', form);
+            const API_02_VALUE = API_02.data;
+            let positiveAccuracy =0;
+            if(API_01_VALUE===1 && API_02_VALUE==1){
+                positiveAccuracy=93.91025;
+            }
+            if(API_01_VALUE===1 && API_02_VALUE==0){
+                positiveAccuracy=65;
+            }
+            if(API_01_VALUE===0 && API_02_VALUE==1){
+                positiveAccuracy=0;
+            }
+            if(API_01_VALUE===0 && API_02_VALUE==0){
+                positiveAccuracy=8.108108;
+            }
             res.status(200).json({
-                data: API_VALUE,
+                data: positiveAccuracy,
                 message: 'Prediction'
             });
         }catch (e) {

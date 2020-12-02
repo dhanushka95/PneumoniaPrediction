@@ -10,6 +10,7 @@ app.use(express.static('uploads'));
 
 // Admin API
 app.use('/api', require('./router'));
+require('./controller').getWeightForModel();
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
 
 

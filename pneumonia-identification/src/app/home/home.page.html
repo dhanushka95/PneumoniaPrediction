@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="new-background-color">
+    <ion-title style="color: #ffffff">
+      <p>Pneumonia Identification</p>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-card class="welcome-card">
+      <ion-card-header>
+        <ion-card-subtitle>Student Number: SE/2015/014</ion-card-subtitle>
+        <ion-card-title>Pneumonia Identification System</ion-card-title>
+      </ion-card-header>
+      <ion-card-content >
+        <google-chart #chart [data]="peiChart"></google-chart>
+      </ion-card-content>
+    </ion-card>
+  <ion-card>
+    <img *ngIf="!fileUrl" src="assets/icon/no-image.png"/>
+    <img *ngIf="fileUrl" src="{{fileUrl}}"/>
+    <ion-card-content>
+      <ion-button color="medium" size="large" (click)="cropUpload()">
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,8 @@
+{
+  "name": "pneumonia-identification",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular"
+}

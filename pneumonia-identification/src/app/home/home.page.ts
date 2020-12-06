@@ -42,7 +42,6 @@ export class HomePage {
   cropUpload() {
     this.imagePicker.getPictures({ maximumImagesCount: 1, outputType: 0 }).then((results) => {
       for (let i = 0; i < results.length; i++) {
-        console.log('Image URI: ' + results[i]);
         const fileTransfer: FileTransferObject = this.transfer.create();
         const uploadOpts: FileUploadOptions = {
                     fileKey: 'image',
@@ -51,7 +50,6 @@ export class HomePage {
 
         fileTransfer.upload(results[i], 'http://localhost:5000/api/predict', uploadOpts)
                       .then((data) => {
-                        console.log(data);
                         this.respData = JSON.parse(data.response);
                         this.peiChart = {
                               chartType: 'PieChart',

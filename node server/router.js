@@ -43,7 +43,7 @@ router.post(
                 headers: form_2.getHeaders()
             }).post('http://127.0.0.1:5002/predict', form_2);
             const API_02_VALUE = API_02.data;
-            let positiveAccuracy = (API_01_VALUE+API_02_VALUE)/2;
+            let positiveAccuracy = ((API_01_VALUE+API_02_VALUE)/2)*100;
             res.status(200).json({
                 data: positiveAccuracy,
                 message: 'Prediction'

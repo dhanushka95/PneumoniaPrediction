@@ -92,55 +92,95 @@ exports.createCSV = async(req, res, next) => {
 
 };
 
-exports.getWeightForModel = async () => {
+exports.getModelDetails = async () => {
     let record = [];
-    const data = await fs.readFileSync('./API_Evaluate.csv');
+    const data = await fs.readFileSync('./python files/Data/API_Evaluate.csv');
     record = await neatCsv(data);
-    let result_1_1_1 =0;
-    let result_1_1_0 =0;
-    let result_1_0_1 =0;
-    let result_1_0_0 =0;
-    let result_0_1_1 =0;
-    let result_0_0_1 =0;
-    let result_0_0_0 =0;
-    let result_0_1_0 =0;
-    let total = record.length;
+    let total_expected_positive_image_count = 0;
+    let total_expected_negative_image_count = 0;
+    let model_01_TRUE_POSITIVE = 0;
+    let model_01_TRUE_NAGETIVE = 0;
+    let model_01_FALSE_POSITIVE = 0;
+    let model_01_FALSE_NAGETIVE = 0;
+
+    let model_02_TRUE_POSITIVE = 0;
+    let model_02_TRUE_NAGETIVE = 0;
+    let model_02_FALSE_POSITIVE = 0;
+    let model_02_FALSE_NAGETIVE = 0;
+
+    let model_03_TRUE_POSITIVE = 0;
+    let model_03_TRUE_NAGETIVE = 0;
+    let model_03_FALSE_POSITIVE = 0;
+    let model_03_FALSE_NAGETIVE = 0;
+
     for(let i=0;i<record.length;i++){
-        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='1'){
-            result_1_1_1++;
+        if(record[i]['expected out put'] === '1'){
+            total_expected_positive_image_count++;
+            if(record[i]['prediction of API 01'] === '0'){
+                model_01_FALSE_NAGETIVE++;
+            }
+            if(record[i]['prediction of API 01'] === '1'){
+                model_01_TRUE_POSITIVE++;
+            }
+            if(record[i]['prediction of API 02'] === '0'){
+                model_02_FALSE_NAGETIVE++;
+            }
+            if(record[i]['prediction of API 02'] === '1'){
+                model_02_TRUE_POSITIVE++;
+            }
+            if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] === '0'){
+                model_03_FALSE_NAGETIVE++;
+            }
+            if((record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] === '1')||(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] === '0')||(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] === '1')){
+                model_03_TRUE_POSITIVE++;
+            }
         }
-        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='0'){
-            result_1_1_0++;
-        }
-        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='1'){
-            result_1_0_1++;
-        }
-        if(record[i]['prediction of API 01'] === '1' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='0'){
-            result_1_0_0++;
-        }
-        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='1'){
-            result_0_1_1++;
-        }
-        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='1'){
-            result_0_0_1++;
-        }
-        if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '0' && record[i]['expected out put'] ==='0'){
-            result_0_0_0++;
-        }if(record[i]['prediction of API 01'] === '0' && record[i]['prediction of API 02'] == '1' && record[i]['expected out put'] ==='0'){
-            result_0_1_0++;
+
+        if(record[i]['expected out put'] === '0'){
+            total_expected_negative_image_count++;
+            if(record[i]['prediction of API 01'] === '0'){
+                model_01_TRUE_NAGETIVE++;
+            }
+            if(record[i]['prediction of API 01'] === '1'){
+                model_01_FALSE_POSITIVE++;
+            }
+            if(record[i]['prediction of API 02'] === '0'){
+                model_02_TRUE_NAGETIVE++;
+            }
+            if(record[i]['prediction of API 02'] === '1'){
+                model_02_FALSE_POSITIVE++;
+            }
+            if(record[i]['prediction of API 01'] === '1' || record[i]['prediction of API 02'] === '1'){
+                model_03_FALSE_POSITIVE++;
+            }
+            if((record[i]['prediction of API 01'] === '0' || record[i]['prediction of API 02'] === '0')){
+                model_03_TRUE_NAGETIVE++;
+            }
         }
     }
-    console.log('result_1_1_1',((result_1_1_1/total)*100));
-    console.log('result_1_1_0',((result_1_1_0/total)*100));
-    console.log('result_1_0_1',((result_1_0_1/total)*100));
-    console.log('result_1_0_0',((result_1_0_0/total)*100));
-    console.log('result_0_1_1',((result_0_1_1/total)*100));
-    console.log('result_0_0_1',((result_0_0_1/total)*100));
-    console.log('result_0_0_0',((result_0_0_0/total)*100));
-    console.log('result_0_1_0',((result_0_1_0/total)*100));
-    console.log('positive percentage--------------------');
-    console.log('result_1_1',((result_1_1_1/(result_1_1_1+result_1_1_0))*100));
-    console.log('result_1_0',((result_1_0_1/(result_1_0_1+result_1_0_0))*100));
-    console.log('result_0_1',(isNaN(result_0_1_1/(result_0_1_1+result_0_1_0))?0:result_0_1_1/(result_0_1_1+result_0_1_0)*100));
-    console.log('result_0_0',((result_0_0_1/(result_0_0_1+result_0_0_0))*100));
+    console.log('======== MODEL 01');
+    console.log('EXPECTED NUMBER OF POSITIVE COUNT:',total_expected_positive_image_count);
+    console.log('EXPECTED NUMBER OF NEGATIVE COUNT:',total_expected_negative_image_count);
+    console.log('TRUE POSITIVE COUNT:',model_01_TRUE_POSITIVE);
+    console.log('TRUE NEGATIVE COUNT:',model_01_TRUE_NAGETIVE);
+    console.log('FALSE POSITIVE COUNT:',model_01_FALSE_POSITIVE);
+    console.log('FALSE NEGATIVE COUNT:',model_01_FALSE_NAGETIVE);
+    console.log('\n');
+
+    console.log('======== MODEL 02');
+    console.log('EXPECTED NUMBER OF POSITIVE COUNT:',total_expected_positive_image_count);
+    console.log('EXPECTED NUMBER OF NEGATIVE COUNT:',total_expected_negative_image_count);
+    console.log('TRUE POSITIVE COUNT:',model_02_TRUE_POSITIVE);
+    console.log('TRUE NEGATIVE COUNT:',model_02_TRUE_NAGETIVE);
+    console.log('FALSE POSITIVE COUNT:',model_02_FALSE_POSITIVE);
+    console.log('FALSE NEGATIVE COUNT:',model_02_FALSE_NAGETIVE);
+    console.log('\n');
+    console.log('======== MODEL 03');
+    console.log('EXPECTED NUMBER OF POSITIVE COUNT:',total_expected_positive_image_count);
+    console.log('EXPECTED NUMBER OF NEGATIVE COUNT:',total_expected_negative_image_count);
+    console.log('TRUE POSITIVE COUNT:',model_03_TRUE_POSITIVE);
+    console.log('TRUE NEGATIVE COUNT:',model_03_TRUE_NAGETIVE);
+    console.log('FALSE POSITIVE COUNT:',model_03_FALSE_POSITIVE);
+    console.log('FALSE NEGATIVE COUNT:',model_03_FALSE_NAGETIVE);
+
  };

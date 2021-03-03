@@ -26,8 +26,8 @@ export class HomePage {
       chartType: 'PieChart',
       dataTable: [
           ['Identification', 'True Or False'],
-          ['Normal', 0],
-          ['Pneumonia', 0]
+          ['Normal', 50],
+          ['Pneumonia', 50]
       ],
       options: {
         height: '50%',
